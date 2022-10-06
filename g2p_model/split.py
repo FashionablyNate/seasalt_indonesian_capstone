@@ -4,7 +4,7 @@ import sys
 def main():
 
     if ( len( sys.argv ) != 3 ):
-        print( "Useage: " + sys.argv[0] + " <lexicon> <percentage of lexicon in test.lex>" )
+        print( "Useage: " + sys.argv[0] + " <lexicon> <test lexicon percentage>" )
         return -1
 
     input_file = sys.argv[1]
