@@ -16,7 +16,7 @@ def main():
     lexicon_txt = open( input_file, 'r' );
 
     for line in lexicon_txt.readlines():
-        if random.randint( 1, 100 ) < int( test_percent ):
+        if random.randint( 0, 100 ) < int( test_percent ):
             test.append( line )
         else:
             train.append( line )
