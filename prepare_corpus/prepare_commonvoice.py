@@ -71,99 +71,79 @@ def convert_num(text):
     return converted_text.upper()
 
 def process_num(m):
-    text = re.sub(",","",m)
-    text = num2words(text, lang="fr")
+    text = re.sub(",","",m.group())
+    text = num2words(int(text), lang="id")
+    text = text.upper()
     return text
 
-#    text = re.sub(r'â', "â", text)
-#    text = re.sub(r'ä', "a", text)
-#    text = re.sub(r'ã', "a", text)
-#    text = re.sub(r'á', "á", text)
-#    text = re.sub(r'é', "é", text)
-#    text = re.sub(r'è', "è", text)
-#    text = re.sub(r'ê', "ê", text)
-#    text = re.sub(r'î', "î", text)
-#    text = re.sub(r'Ç', "ç", text)
-#    text = re.sub(r'ç', "ç", text)
-#    text = re.sub(r'õ', "o", text)
-#    text = re.sub(r'ō', "o", text)
-#    text = re.sub(r'ū', "u", text)
-#    text = re.sub(r'ß', "s", text)
 def text_proc(text):
-    text = text.lower()
-    text = re.sub(r"[\-,\.!\?\"{};:.,\(\)…ʿ“”=]", '', text)
-    text = re.sub(r"[’`′´]", "'", text)
-    text = re.sub(r"[|]", ' ', text)
-    text = re.sub(r' – ', " ", text)
-    text = re.sub(r'–', " ", text)
-    text = re.sub(r'[-_]', " ", text)
-    #text = re.sub(fr'{decode_hex("\xa0")[0]}', " ", text)
-    #text = re.sub(r'œ', "oe", text)
-    #text = re.sub(r'°', " degrés", text)
-    text = re.sub(r'æ', "ae", text)
-    text = re.sub(r'â', "â", text)
-    text = re.sub(r'ã', "a", text)
-    text = re.sub(r'ā', "a", text)
-    text = re.sub(r'á', "á", text)
-    text = re.sub(r'à', "à", text)
-    text = re.sub(r'é', "é", text)
-    text = re.sub(r'É', "é", text)
-    text = re.sub(r'è', "è", text)
-    text = re.sub(r'ê', "ê", text)
-    text = re.sub(r'ě', "e", text)
-    text = re.sub(r'ę', "e", text)
-    text = re.sub(r'ī', "i", text)
-    text = re.sub(r'í', "i", text)
-    text = re.sub(r'ı', "i", text)
-    text = re.sub(r'î', "î", text)
-    text = re.sub(r'č', "c", text)
-    text = re.sub(r'ć', "c", text)
-    text = re.sub(r'ċ', "c", text)
-    text = re.sub(r'Ç', "ç", text)
-    text = re.sub(r'ç', "ç", text)
-    text = re.sub(r'ň', "n", text)
-    text = re.sub(r'ń', "n", text)
-    text = re.sub(r'õ', "o", text)
-    text = re.sub(r'ō', "o", text)
-    text = re.sub(r'ø', "o", text)
-    text = re.sub(r'ô', "ô", text)
-    text = re.sub(r'ū', "u", text)
-    text = re.sub(r'ů', "u", text)
-    text = re.sub(r'ù', "ù", text)
-    text = re.sub(r'û', "û", text)
-    text = re.sub(r'ß', "s", text)
-    text = re.sub(r'ł', "l", text)
-    text = re.sub(r'š', "s", text)
-    text = re.sub(r'ș', "s", text)
-    text = re.sub(r'ş', "s", text)
-    text = re.sub(r'ț', "t", text)
-    text = re.sub(r'ÿ', "y", text)
-    text = re.sub(r'ż', "z", text)
-    text = re.sub(r'ž', "z", text)
-    text = re.sub(r'°', " degrés", text)
-    text = re.sub(r' encor ', " encore ", text)
-    text = re.sub(r' mâtin ', " matin ", text)
-    text = re.sub(r' plangô ', " plango ", text)
-    text = re.sub(r' premiere ', " première ", text)
-    text = re.sub(r' pére ', " père ", text)
-    text = re.sub(r' quarant ', " quarante ", text)
-    text = re.sub(r' qutre ', " quatre ", text)
-    text = re.sub(r' rhythme ', " rythme ", text)
-    text = re.sub(r' rhythmées ', " rythmées ", text)
-    text = re.sub(r' shiraz ', " schiraz ", text)
-    text = re.sub(r' sixème ', " sixième ", text)
-    text = re.sub(r' tems ', " temps ", text)
-    text = re.sub(r' égypte ', " egypte ", text)
-    text = re.sub(r' m ', " monsieur ", text)
-    text = re.sub(r' mm ', " messieurs ", text)
-    text = re.sub(r' mr ', " monsieur ", text)
-    text = re.sub(r' mosieu ', " monsieur ", text)
-    text = re.sub(r' mme ', " madame ", text)
-    text = re.sub(r' mlle ', " mademoiselle ", text)
+    text = text.upper()
+
+    ## non-ascii
+    text = re.sub(r'[`‘’ʻʼ]', '\'', text)
+    text = re.sub(r'–', '-', text)
+    text = re.sub(r'[…，]', ',', text)
+
+    ## notes
+    text = re.sub(r' \(.*?\) | \[.*?\] | \{.*?\} ', ' ', text)
+    text = re.sub(r' //\S* ', ' ', text)
+
+    ## html tag
+    text = re.sub(r'&GT;|&LT;|&LRM;|&RLM;', '', text)
+    text = re.sub(r'&NBSP;', ' ', text)
+    text = re.sub(r'&AMP;', ' DAN ', text)
+
+    ## url
+    text = re.sub(r' WWW\.(\w+)\.(COM|NET|EDU|ORG)/(\w+) ', r' WWW DOT \1 DOT \2 POTONG \3 ', text)
+    text = re.sub(r' WWW\.(\w+)\.(COM|NET|EDU|ORG) ', r' WWW DOT \1 DOT \2 ', text)
+    text = re.sub(r' (\w+)\.(COM|NET|EDU|ORG)/(\w+) ', r' \1 DOT \2 POTONG \3 ', text)
+    text = re.sub(r' (\w+)\.(COM|NET|EDU|ORG) ', r' \1 DOT \2 ', text)
+
+    ## email
+    text = re.sub(r' (\w+)@(\w+)\.(COM|NET|EDU) ', r' \1 DI \2 DOT \3 ', text)
+    
+    ## money
+    text = re.sub(r' \$(\d+)((?:,\d{3})*)((?:.\d+)*)( RIBUAN| JUTA| MILYAR)?([,.!?])? ', r' \1\2\3\4 DOLAR\5 ', text)
+    text = re.sub(r' £(\d+)((?:,\d{3})*)((?:.\d+)*)( RIBUAN| JUTA| MILYAR)?([,.!?])? ', r' \1\2\3\4 POUND\5 ', text)
+    text = re.sub(r' ¥(\d+)((?:,\d{3})*)((?:.\d+)*)( RIBUAN| JUTA| MILYAR)?([,.!?])? ', r' \1\2\3\4 YUAN\5 ', text)
+    text = re.sub(r' €(\d+)((?:,\d{3})*)((?:.\d+)*)( RIBUAN| JUTA| MILYAR)?([,.!?])? ', r' \1\2\3\4 EURO\5 ', text)
+
+    ## measurement
+    text = re.sub(r' (\d+)% ', r' \1 PERSEN ', text)
+
+    ## punct (reused from English)
+    text = re.sub(r'(,){2,}|(\.){2,}|(!){2,}|(\?){2,}|(\-){2,}|(\'){2,}', r'\1\2\3\4\5\6 ', text)
+    text = re.sub(r'([,.!?]){2,}', r'\1 ', text)
+    text = re.sub(r'[:;"“”(){}\[\]<>#$%*+/=@\\^_~|`]', ' ', text)
+    text = re.sub(r' \'+((?:[\w\-\']+[,.?!]*)+)\'+ ', r' \1 ', text)
+    text = re.sub(r'([\w\'\- ]), ', r'\1 <KOMA> ', text)
+    text = re.sub(r'([\w\'\- ])\. ', r'\1 <MASA> ', text)
+    text = re.sub(r'([\w\'\- ])! ', r'\1 <TANDASERU> ', text)
+    text = re.sub(r'([\w\'\- ])\? ', r'\1 <TANDATANYA> ', text)
+    text = re.sub(r' \'+([\w\-\']+)\'+ ', r' \1 ', text)
+    text = re.sub(r' \'+([\w\-\']+)((?: [\w\-\']+?)*)\'+ ', r' \1\2 ', text)
+    text = re.sub(r' \'+BOUT ', ' ABOUT ', text)
+    text = re.sub(r' \'+', ' ', text)
+
+    ## number
     text = re.sub(r" '(\d)", r" \1", text)
     text = re.sub(r"\d+(,\d+)*",process_num,text)
     text = text.replace('--', ' ')
     text = re.sub(r'\s+', ' ', text)
+
+    ## misc
+    text = re.sub(r'é', "É", text)
+    text = re.sub(r'É', "É", text)
+    text = re.sub(r'°', " DERAJAT", text) 
+
+    ## post
+    text = re.sub(r'[,.?!]', ' ', text)
+    text = re.sub(r'-+ [\-\']+| [\-\']+|-+ ', ' ', text)
+    if re.search(r' \w(?:-\w)+ ', text):
+        for group in re.findall(r' \w(?:-\w)+ ', text):
+            text = text.replace(group, group.replace('-', ' '))
+    text = re.sub(r' (?:UH) ', ' EH ', text) # according to google trans UH -> EH
+
     return text.strip()
 
 def tsv_proc(tsv_path, wav_path, out_path, prefix):
